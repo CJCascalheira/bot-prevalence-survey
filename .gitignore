@@ -1,6 +1,7 @@
 # IGNORE DATA FILES
 data/raw/**
 data/passed_bdts/**
+data/qual_fraud_check/not_coded/**
 
 # History files
 .Rhistory
