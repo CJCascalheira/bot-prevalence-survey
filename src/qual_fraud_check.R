@@ -1,0 +1,34 @@
+# QUALITATIVE FRAUD CHECK -------------------------------------------------
+
+# Author: Cory J. Cascalheira
+# Created: 04/20/2023
+
+# Select the qualitative responses from the open-ended questions to determine
+# if the responses are reasonably authored by humans and whether they come from
+# the target populations (i.e., psychological researchers and students).
+
+# LIBRARIES AND IMPORT DATA -----------------------------------------------
+
+# Load dependencies
+library(tidyverse)
+
+# Import data
+passed_bdts_04.20.23 <- read_csv("data/passed_bdts/passed_bdts_04.20.23.csv")
+
+# PREPARE DATA FRAMES -----------------------------------------------------
+
+# Select the data and create variables
+qual_review_a <- passed_bdts_04.20.23 %>%
+  # Create filter categories
+  mutate(
+    edu_email1 = if_else(str_detect(contact1, regex("edu$", ignore_case = TRUE)), 1, 0),
+    edu_email2 = if_else(str_detect(contact2, regex("edu$", ignore_case = TRUE)), 1, 0),
+    no_bots_experience = if_else(got_bots != "Yes", 1, 0)
+  ) %>%
+  unite(has_edu_email, edu_email1:edu_email2) %>%
+  mutate(has_edu_email = if_else(has_edu_email > 0, 1, 0)) %>%
+  # Name the qual review 
+  mutate(qual_review = "A") %>%
+  # Add columns for raters to use
+  select(ResponseId, qual_review, has_edu_email, no_bots_experience, starts_with("qual"))
+qual_review_a
