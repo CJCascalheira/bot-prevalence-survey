@@ -1,3 +1,7 @@
+# IGNORE DATA FILES
+data/raw/**
+data/passed_bdts/**
+
 # History files
 .Rhistory
 .Rapp.history
