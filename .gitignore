@@ -2,6 +2,7 @@
 data/raw/**
 data/passed_bdts/**
 data/qual_fraud_check/not_coded/**
+data/clean/contact_info/**
 
 # History files
 .Rhistory

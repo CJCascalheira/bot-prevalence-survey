@@ -70,7 +70,7 @@ previous_respondents <- c(passed_bdts_04.20.23$ResponseId)
 bot_survey <- bot_survey %>%
   filter(!ResponseId %in% previous_respondents)
 
-# Check count - 518
+# Check count
 nrow(bot_survey)
 
 # KEEP .EDU ADDRESSES -----------------------------------------------------
@@ -79,11 +79,14 @@ nrow(bot_survey)
 bot_survey_edu <- bot_survey %>%
   mutate(
     edu_email1 = if_else(str_detect(contact1, regex("edu$", ignore_case = TRUE)), 1, 0),
-    edu_email2 = if_else(str_detect(contact2, regex("edu$", ignore_case = TRUE)), 1, 0)
+    edu_email2 = if_else(str_detect(contact2, regex("edu$", ignore_case = TRUE)), 1, 0),
+    edu_email1 = if_else(is.na(edu_email1), 0, edu_email1),
+    edu_email2 = if_else(is.na(edu_email2), 0, edu_email2)
   ) %>%
   # Keep only respondents with .edu email address
   filter(edu_email1 == 1 | edu_email2 == 1) %>%
   select(-edu_email1, -edu_email2)
+bot_survey_edu
 
 # Remove the .edu emails from the survey, add them back later
 bot_survey <- bot_survey %>%
@@ -599,7 +602,7 @@ unique_resolution
 # resolution to the list.
 
 # Create vector of suspicious resolutions
-suspect_resolutions <- c("1060x918", "1072x918", "1712x926", "1718x926", "1718x927", "1716x927", "1108x918", "1664x889", "1642x924", "2256x853", "1918x927", "1918x926", "1364x615", "1398x746", "1687x927", "393x851", "390x844", "385x833", "377x753", "491x1064", "424x891", "412x938", "412x892", "412x869", "951x912", "320x640", "361x722", "360x780", "360x740", "424x848", "444x987", "450x950", "834x1194", "390x844", "393x873", "414x896", "1685x948", "393x830", "393x851")
+suspect_resolutions <- c("1060x918", "1072x918", "1712x926", "1718x926", "1718x927", "1716x927", "1108x918", "1664x889", "1642x924", "2256x853", "1918x927", "1918x926", "1364x615", "1398x746", "1687x927", "385x833", "377x753", "491x1064", "424x891", "412x938", "951x912", "361x722", "424x848", "444x987", "450x950", "834x1194", "1685x948", "393x830", "1262x889", "1659x926", "384x832", "360x772", "992x1282", "992x1282", "360x772", "384x832", "393x830", "393x852", NA_character_)
 
 # Remove respondents with suspicious screen resolutions
 bot_survey <- bot_survey %>%
@@ -680,7 +683,7 @@ nrow(bot_survey)
 
 # COMBINE DATA ------------------------------------------------------------
 
-# Bind the two dataframes
+# Bind the dataframes
 bot_survey <- rbind(bot_survey, bot_survey_edu) %>%
   rbind(bot_survey_no_bots)
 
@@ -699,4 +702,4 @@ nrow(bot_survey)
 # but snuck in and were not detected by our BDTs)
 
 # Save the data
-write_csv(bot_survey, "data/passed_bdts/passed_bdts_04.20.23.csv")
+write_csv(bot_survey, "data/passed_bdts/passed_bdts_05.16.23.csv")
